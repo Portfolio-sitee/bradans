@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,7 +18,7 @@
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Inter', sans-serif; background:#f8f9fa; color:var(--text); line-height:1.5; }
-  
+
     /* Header */
     header {
       background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100;
@@ -35,15 +35,19 @@
     }
     .more-btn { font-size:20px; color:var(--text-light); }
 
-    /* Greeting */
-    .greeting {
-      padding:20px 16px; background:#fff; border-bottom:1px solid var(--border);
+    /* ACCOUNT BLOCK – REPLACES GREETING */
+    .account-block {
+      background:#fff; margin:16px; padding:20px; border-radius:16px; box-shadow:0 2px 8px rgba(0,0,0,.08); border:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center;
     }
-    .greeting h1 {
-      font-size:24px; font-weight:600; margin-bottom:4px;
+    .account-label {
+      font-size:14px; color:var(--text-light); margin-bottom:4px;
     }
-    .greeting p {
-      font-size:14px; color:var(--text-light);
+    .account-name {
+      font-size:18px; font-weight:700; color:var(--text);
+    }
+    .account-arrow {
+      font-size:24px; color:var(--chase-blue); font-weight:bold;
     }
 
     /* Balance Card */
@@ -164,11 +168,14 @@
     </div>
   </header>
 
-  <!-- Greeting – DYNAMIC (08:55 PM WAT → Good evening) -->
-  <section class="greeting">
-    <h1 id="dynamic-greeting">Good evening, George</h1>
-    <p>Welcome back to your Total Checking account</p>
-  </section>
+  <!-- ACCOUNT BLOCK – "Total Checking (...6560)" -->
+  <div class="account-block">
+    <div>
+      <div class="account-label">Account</div>
+      <div class="account-name">Total Checking (...6560)</div>
+    </div>
+    <div class="account-arrow">></div>
+  </div>
 
   <!-- Balance Card – $6,053.03 -->
   <div class="balance-card">
@@ -238,7 +245,7 @@
     </div>
   </div>
 
-  <!-- Transactions – 10 TOTAL (NEW ZELLE UNDER WIRE) -->
+  <!-- Transactions – 10 TOTAL -->
   <div class="section">
     <div class="section-header">
       <span>See all transactions</span>
@@ -255,7 +262,7 @@
       <div class="trans-amount amount-positive">+$283,008,000.00</div>
     </div>
 
-    <!-- 2. NEW ZELLE PAYMENT FROM TYLER – UNDER $283M -->
+    <!-- 2. ZELLE FROM TYLER -->
     <div class="transaction">
       <div class="trans-left">
         <div class="trans-desc">Zelle payment from TYLER J MCCARTHY MNTMPZN99CS</div>
@@ -364,23 +371,6 @@
   <footer>
     <p>© 2025 JPMorgan Chase & Co. All rights reserved.</p>
   </footer>
-
-  <!-- JavaScript: Dynamic Greeting -->
-  <script>
-    const greetingElement = document.getElementById('dynamic-greeting');
-    const hour = new Date().getHours();
-
-    let greeting;
-    if (hour >= 5 && hour < 12) {
-      greeting = "Good morning, George";
-    } else if (hour >= 12 && hour < 18) {
-      greeting = "Good afternoon, George";
-    } else {
-      greeting = "Good evening, George";
-    }
-
-    greetingElement.textContent = greeting;
-  </script>
 
 </body>
 </html>
