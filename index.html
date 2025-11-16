@@ -14,6 +14,7 @@
       --green:#2e7d32;
       --red:#d32f2f;
       --pending-bg:#fff8e1;
+      --pending-badge:#ff9800;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{
@@ -220,6 +221,8 @@
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
+      position:relative;
+      min-height:80px;
     }
     .transaction:last-child{border:none;}
     .trans-left{flex:1;}
@@ -229,8 +232,25 @@
     .trans-amount{font-weight:600;font-size:16px;text-align:right;}
     .amount-negative{color:var(--red);}
     .amount-positive{color:var(--green);}
-    .pending{background:var(--pending-bg);border-left:3px solid #ff9800;padding-left:13px;}
-    .wire-deposit{background:#e8f5e9;border-left:4px solid var(--green);padding-left:12px;}
+    .pending{
+      background:var(--pending-bg);
+      border-left:3px solid var(--pending-badge);
+      padding-left:13px;
+    }
+
+    /* ==== PENDING Badge – Bottom Right ==== */
+    .pending-badge{
+      background:var(--pending-badge);
+      color:#fff;
+      font-size:10px;
+      font-weight:700;
+      padding:2px 6px;
+      border-radius:4px;
+      position:absolute;
+      bottom:8px;
+      right:16px;
+      z-index:1;
+    }
 
     /* ==== Collapsible extra rows ==== */
     .extra-transactions{
@@ -308,7 +328,7 @@
       text-align:center;
       padding:40px 16px;
       font-size:12px;
-      color:var(--text-light);
+      color:#666;
     }
 
     @media (max-width:340px){
@@ -316,6 +336,8 @@
       .account-title{font-size:18px;}
       .balance-amount{font-size:23px;}
       .balance-label{font-size:10.5px;}
+      .pending-badge{right:12px;bottom:6px;}
+      .transaction{min-height:70px;}
     }
   </style>
 </head>
@@ -383,7 +405,7 @@
     </div>
   </div>
 
-  <!-- Action Buttons (ALL FIXED) -->
+  <!-- Action Buttons -->
   <div class="actions">
     <a href="#" class="action-btn">
       <svg viewBox="0 0 48 48">
@@ -392,14 +414,12 @@
       </svg>
       Pay
     </a>
-
     <a href="#" class="action-btn">
       <svg viewBox="0 0 48 48">
         <path d="M8 24h32m-8-8l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       Transfer
     </a>
-
     <a href="#" class="action-btn">
       <svg viewBox="0 0 48 48">
         <circle cx="24" cy="14" r="3"/>
@@ -423,22 +443,24 @@
 
   <!-- ==== Transactions Section ==== -->
   <div class="section">
-    <!-- Header (toggle) -->
     <div class="section-header" id="transHeader" onclick="toggleTransactions()">
       <span id="transLabel">See all transactions</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
     </div>
 
-    <!-- ALWAYS VISIBLE: first 4 -->
-    <div class="transaction wire-deposit">
+    <!-- ALWAYS VISIBLE: First 4 -->
+    <!-- 1. ONLY THIS ONE IS PENDING -->
+    <div class="transaction pending">
       <div class="trans-left">
-        <div class="trans-desc">Incoming Wire Transfer</div>
+        <div class="trans-desc">Wire transfer</div>
         <div class="trans-merchant">Fedwire REF-9M3X7P1K5V2L8</div>
         <div class="trans-date">Nov 14, 2025</div>
       </div>
       <div class="trans-amount amount-positive">+$283,008,000.00</div>
+      <span class="pending-badge">PENDING</span>
     </div>
 
+    <!-- 2. Zelle (posted) -->
     <div class="transaction">
       <div class="trans-left">
         <div class="trans-desc">Zelle payment from TYLER J MCCARTHY MNTMPZN99CS</div>
@@ -447,7 +469,8 @@
       <div class="trans-amount amount-positive">+$1,600.00</div>
     </div>
 
-    <div class="transaction pending">
+    <!-- 3. Storage (posted) -->
+    <div class="transaction">
       <div class="trans-left">
         <div class="trans-desc">WILTON CT</div>
         <div class="trans-merchant">Storage Wilton CT</div>
@@ -455,14 +478,15 @@
       <div class="trans-amount amount-negative">-$780.61</div>
     </div>
 
-    <div class="transaction pending">
+    <!-- 4. McDonald's (posted) -->
+    <div class="transaction">
       <div class="trans-left">
         <div class="trans-desc">POS DEBIT MCDONALD'S F7362 STAMFORD CT</div>
       </div>
       <div class="trans-amount amount-negative">-$33.14</div>
     </div>
 
-    <!-- COLLAPSIBLE: extra 6 rows -->
+    <!-- COLLAPSIBLE: Extra 6 (all posted) -->
     <div class="extra-transactions" id="extraTrans">
       <div class="transaction">
         <div class="trans-left">
@@ -538,13 +562,15 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer with USA Time (EST) -->
   <footer>
     <p>© 2025 JPMorgan Chase & Co. All rights reserved.</p>
+    <p style="margin-top:8px;font-size:11px;color:#999;">
+      Last updated: November 15, 2025 11:06 PM EST
+    </p>
   </footer>
 
   <script>
-    // Account details
     function toggleDetails(){
       const hidden = document.getElementById('detailsHidden');
       const btn = document.getElementById('toggleBtn');
@@ -555,7 +581,6 @@
         : 'Show details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
     }
 
-    // Transactions toggle
     function toggleTransactions(){
       const header = document.getElementById('transHeader');
       const extra = document.getElementById('extraTrans');
