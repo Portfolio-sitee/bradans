@@ -51,6 +51,11 @@
         .compliance-btn .btn:hover { background:#004494; }
         @media (max-width: 992px) { .hero .container { flex-direction:column; } .login-box { width:100%; margin-top:20px; } }
         @media (max-width: 768px) { nav { display:none; } .hamburger { display:flex; } .hero h1 { font-size:36px; } .hero h2 { font-size:26px; } }
+
+        /* MOBILE-SPECIFIC TAWK HIDE (stops flash instantly on load) */
+        @media (max-width: 768px) {
+            [id*="tawk"], [class*="tawk"], iframe[src*="tawk.to"] { display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; width: 0 !important; }
+        }
     </style>
 </head>
 <body>
@@ -68,7 +73,7 @@
             <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
         </div>
         <nav class="mobile-nav" id="mobile-nav">
-            <a href="#">Checking</a><a href="#">Savings & CDs</a><a href="#">Credit cards</a><a href="#">Home loans</a><a><a href="#">Auto</a><a href="#">Investing by J.P. Morgan</a>
+            <a href="#">Checking</a><a href="#">Savings & CDs</a><a href="#">Credit cards</a><a href="#">Home loans</a><a href="#">Auto</a><a href="#">Investing by J.P. Morgan</a>
         </nav>
     </header>
 
@@ -149,25 +154,54 @@
         });
     </script>
 
-    <!-- TAWK.TO 100% INVISIBLE – NO FLASH EVER (November 2025 working) -->
+    <!-- TAWK.TO 100% INVISIBLE – FIXED FOR MOBILE FLASH (November 2025) -->
     <script type="text/javascript">
-    window.Tawk_API = window.Tawk_API || {};
-    window.Tawk_LoadStart = new Date();
+        // Initialize API early to block loading
+        window.Tawk_API = window.Tawk_API || {};
+        window.Tawk_LoadStart = new Date();
 
-    // Kill the widget before it even tries to show
-    window.Tawk_API.showWidget = function() {};
-    window.Tawk_API.maximize = function() {};
-    window.Tawk_API.popup = function() { return false; };
+        // Override show functions immediately (prevents any render)
+        window.Tawk_API.showWidget = function() {};
+        window.Tawk_API.maximize = function() {};
+        window.Tawk_API.popup = function() { return false; };
+        window.Tawk_API.openChat = function() {};
 
-    window.Tawk_API.onLoad = function() {
-        Tawk_API.hideWidget();
-        // Permanently delete any trace of it every 100ms
-        setInterval(function() {
-            document.querySelectorAll('iframe[src*="tawk.to"], [id*="tawk"], [class*="tawk"]').forEach(el => el.remove());
-        }, 100);
-    };
+        // On load: Hide + clean
+        window.Tawk_API.onLoad = function() {
+            if (window.Tawk_API) {
+                window.Tawk_API.hideWidget();
+            }
+            // Aggressive mobile cleanup (every 50ms for fast mobile iframes)
+            setInterval(function() {
+                const selectors = 'iframe[src*="tawk.to"], [id*="tawk"], [class*="tawk"], .tawk-wrapper';
+                document.querySelectorAll(selectors).forEach(el => {
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = '0';
+                    el.remove(); // Permanently delete
+                });
+            }, 50);
+
+            // DOM mutation observer for dynamic mobile injections
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && (node.id && node.id.includes('tawk') || node.className && node.className.includes('tawk'))) {
+                            node.remove();
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        };
+
+        // Block any events that could show it
+        window.Tawk_API.onChatStarted = function() { if (window.Tawk_API) window.Tawk_API.endChat(); };
+        window.Tawk_API.onChatMaximized = function() { if (window.Tawk_API) window.Tawk_API.hideWidget(); };
+        window.Tawk_API.onChatMinimized = function() { if (window.Tawk_API) window.Tawk_API.hideWidget(); };
     </script>
 
+    <!-- Original embed (load last) -->
     <script type="text/javascript">
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
